@@ -8,7 +8,7 @@ class User(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False, unique=True)
-    password = db.Column(db.String, nullable=False)  # In production, use password hashing
+    password = db.Column(db.String, nullable=False)
     # One-to-many: A user has many cosmetics.
     cosmetics = db.relationship('Cosmetic', backref='user', lazy=True)
 
