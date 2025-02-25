@@ -12,6 +12,9 @@ class User(db.Model, SerializerMixin):
     # One-to-many: A user has many cosmetics.
     cosmetics = db.relationship('Cosmetic', backref='user', lazy=True)
 
+    def authenticate(self, password):
+        return self.password == password
+
 class Category(db.Model, SerializerMixin):
     __tablename__ = 'categories'
     id = db.Column(db.Integer, primary_key=True)

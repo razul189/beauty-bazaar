@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import { useFormik } from "formik";
+import * as yup from "yup";
 
-// Yup validation schema for the cosmetic form
-const CosmeticSchema = Yup.object().shape({
-  name: Yup.string().required("Name is required"),
-  brand: Yup.string().required("Brand is required"),
-  description: Yup.string().required("Description is required"),
-  price: Yup.number()
+const CosmeticFormSchema = yup.object().shape({
+  name: yup.string().required("Name is required"),
+  brand: yup.string().required("Brand is required"),
+  description: yup.string().required("Description is required"),
+  price: yup
+    .number()
     .required("Price is required")
     .min(1, "Price must be at least 1")
     .max(100, "Price must be 100 or less"),
-  category_id: Yup.number().required("Category ID is required"),
+  category_id: yup.number().required("Category ID is required"),
 });
 
-const ReviewForm = () => {
+const ReviewForm = ({ user }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [initialValues, setInitialValues] = useState({
@@ -27,7 +27,6 @@ const ReviewForm = () => {
   });
 
   useEffect(() => {
-    // Fetch existing cosmetic data for editing
     fetch(`http://localhost:5555/api/cosmetics/${id}`)
       .then((r) => r.json())
       .then((data) =>
@@ -42,63 +41,76 @@ const ReviewForm = () => {
       .catch((err) => console.error(err));
   }, [id]);
 
-  const onSubmit = (values) => {
-    fetch(`http://localhost:5555/api/cosmetics/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    })
-      .then((r) => r.json())
-      .then(() => {
-        navigate(-1);
+  const formik = useFormik({
+    enableReinitialize: true,
+    initialValues: initialValues,
+    validationSchema: CosmeticFormSchema,
+    onSubmit: (values) => {
+      fetch(`http://localhost:5555/api/cosmetics/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
       })
-      .catch((err) => console.error(err));
-  };
+        .then((r) => r.json())
+        .then(() => navigate(-1))
+        .catch((err) => console.error(err));
+    },
+  });
 
   return (
     <div className="container">
-      <h1>{id ? "Edit Cosmetic" : "Add Cosmetic"}</h1>
-      <Formik
-        enableReinitialize
-        initialValues={initialValues}
-        validationSchema={CosmeticSchema}
-        onSubmit={onSubmit}
-      >
-        {({ isSubmitting }) => (
-          <Form>
-            <div>
-              <label htmlFor="name">Name</label>
-              <Field type="text" name="name" />
-              <ErrorMessage name="name" component="div" />
-            </div>
-            <div>
-              <label htmlFor="brand">Brand</label>
-              <Field type="text" name="brand" />
-              <ErrorMessage name="brand" component="div" />
-            </div>
-            <div>
-              <label htmlFor="description">Description</label>
-              <Field type="text" name="description" />
-              <ErrorMessage name="description" component="div" />
-            </div>
-            <div>
-              <label htmlFor="price">Price</label>
-              <Field type="number" name="price" />
-              <ErrorMessage name="price" component="div" />
-            </div>
-            <div>
-              <label htmlFor="category_id">Category ID</label>
-              <Field type="number" name="category_id" />
-              <ErrorMessage name="category_id" component="div" />
-            </div>
-            <button type="submit" disabled={isSubmitting}>
-              {id ? "Update Cosmetic" : "Add Cosmetic"}
-            </button>
-          </Form>
-        )}
-      </Formik>
+      <h1>Edit Cosmetic</h1>
+      <form onSubmit={formik.handleSubmit}>
+        <label htmlFor="name">Name</label>
+        <input
+          type="text"
+          name="name"
+          value={formik.values.name}
+          onChange={formik.handleChange}
+        />
+        {formik.errors.name && <p className="error">{formik.errors.name}</p>}
+
+        <label htmlFor="brand">Brand</label>
+        <input
+          type="text"
+          name="brand"
+          value={formik.values.brand}
+          onChange={formik.handleChange}
+        />
+        {formik.errors.brand && <p className="error">{formik.errors.brand}</p>}
+
+        <label htmlFor="description">Description</label>
+        <input
+          type="text"
+          name="description"
+          value={formik.values.description}
+          onChange={formik.handleChange}
+        />
+        {formik.errors.description && <p className="error">{formik.errors.description}</p>}
+
+        <label htmlFor="price">Price</label>
+        <input
+          type="number"
+          name="price"
+          value={formik.values.price}
+          onChange={formik.handleChange}
+        />
+        {formik.errors.price && <p className="error">{formik.errors.price}</p>}
+
+        <label htmlFor="category_id">Category ID</label>
+        <input
+          type="number"
+          name="category_id"
+          value={formik.values.category_id}
+          onChange={formik.handleChange}
+        />
+        {formik.errors.category_id && <p className="error">{formik.errors.category_id}</p>}
+
+        <button type="submit">Update Cosmetic</button>
+      </form>
     </div>
   );
 };
 
 export default ReviewForm;
+

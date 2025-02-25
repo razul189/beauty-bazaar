@@ -1,38 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const Home = ({ cosmetics }) => {
-  // Group cosmetics by category_id.
-  const categoriesMap = cosmetics.reduce((acc, cosmetic) => {
-    const catId = cosmetic.category_id;
-    // Ensure the cosmetic includes a serialized category; adjust as needed.
-    if (!acc[catId]) {
-      acc[catId] = {
-        id: catId,
-        name: cosmetic.category ? cosmetic.category.name : "Unknown",
-        cosmetics: [],
-      };
-    }
-    acc[catId].cosmetics.push(cosmetic);
-    return acc;
-  }, {});
+const Home = ({ user }) => {
+  const [categories, setCategories] = useState([]);
 
-  const categories = Object.values(categoriesMap);
+  useEffect(() => {
+    if (user) {
+      fetch("http://localhost:5555/api/my_categories")
+        .then((res) => res.json())
+        .then((data) => setCategories(data))
+        .catch((err) => console.error(err));
+    }
+  }, [user]);
+
+  if (!user) {
+    return <div>Please log in to see your categories.</div>;
+  }
 
   return (
     <div className="container">
       <h1>Your Categories</h1>
-      <div className="grid">
-        {categories.map((category) => (
-          <div key={category.id} className="product-card">
-            <h3>{category.name}</h3>
-            <p>{category.cosmetics.length} product(s)</p>
-            <Link to={`/categories/${category.id}`}>View Category</Link>
-          </div>
-        ))}
-      </div>
+      {categories.length > 0 ? (
+        <div className="grid">
+          {categories.map((category) => (
+            <div key={category.id} className="product-card">
+              <h3>{category.name}</h3>
+              <Link to={`/categories/${category.id}`}>View Category</Link>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p>You don't have any cosmetics yet. Add a cosmetic to see your categories.</p>
+      )}
     </div>
   );
 };
 
 export default Home;
+
+

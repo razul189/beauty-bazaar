@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-const CosmeticDetail = () => {
+const CosmeticDetail = ({ user }) => {
   const { id } = useParams();
   const [cosmetic, setCosmetic] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5555/api/cosmetics")
-      .then((r) => r.json())
-      .then((data) => {
-        const found = data.find((c) => c.id === parseInt(id));
-        setCosmetic(found);
-      })
+    fetch(fetch(`http://localhost:5555/api/cosmetics/${id}`)
+) 
+      .then((res) => res.json())
+      .then((data) => setCosmetic(data))
       .catch((err) => console.error(err));
   }, [id]);
 
@@ -23,9 +21,10 @@ const CosmeticDetail = () => {
       <p>Brand: {cosmetic.brand}</p>
       <p>{cosmetic.description}</p>
       <p>Price: ${cosmetic.price}</p>
-      {/* might add edit or delete buttons */}
+      {/* Add more details or edit/delete options as needed */}
     </div>
   );
 };
 
 export default CosmeticDetail;
+
