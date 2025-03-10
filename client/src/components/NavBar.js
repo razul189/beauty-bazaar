@@ -5,7 +5,7 @@ function NavBar({ user, setUser }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    fetch("http://localhost:5555/api/logout", { method: "DELETE" })
+    fetch("http://localhost:5555/api/logout", { method: "POST",credentials: 'include', })
       .then(() => {
         setUser(null);
         navigate("/auth");
@@ -19,7 +19,13 @@ function NavBar({ user, setUser }) {
       <ul>
         <li><Link to="/">Home</Link></li>
         {user ? (
-          <li><button onClick={handleLogout}>Logout</button></li>
+          <>
+            <li><Link to="/users">Users</Link></li>
+            <li><Link to="/cosmetics">Cosmetics</Link></li>
+            <li><Link to="/providers">Providers</Link></li>
+            <li><Link to="/categories">Categories</Link></li>
+            <li><button onClick={handleLogout}>Logout</button></li>
+          </>
         ) : (
           <li><Link to="/auth">Login</Link></li>
         )}

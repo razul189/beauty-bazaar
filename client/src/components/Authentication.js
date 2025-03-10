@@ -18,19 +18,36 @@ function Authentication({ setUser }) {
     fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify(values),
     })
       .then((response) => {
         if (response.ok) return response.json();
-        else throw new Error("Invalid credentials");
+        else {
+          return response.json().then(errorData => { // Parse error JSON
+            throw new Error(JSON.stringify({status: response.status, message: errorData.error})); //Include status code, and message.
+          });
+        }
       })
       .then((data) => {
         setUser(data); // Store logged-in user state
         navigate("/"); // Redirect to homepage
       })
       .catch((error) => {
-        console.error(error);
-        setErrorMessage("Invalid credentials. Please check your username and password.");
+        try{
+          const parsedError = JSON.parse(error.message);
+          if(parsedError.status === 400 && signUp){
+            setErrorMessage("User already registered.");
+          } else if(parsedError.status === 401){
+            setErrorMessage("Invalid Credentials. Please check username and password.");
+          } else {
+            setErrorMessage("An error occurred. Please try again.");
+            console.error(error);
+          }
+        } catch(e){
+          setErrorMessage("An error occurred. Please try again.");
+          console.error(error);
+        }
       });
   };
 
@@ -96,6 +113,3 @@ function Authentication({ setUser }) {
 }
 
 export default Authentication;
-
-
-

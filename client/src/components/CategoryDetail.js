@@ -1,57 +1,41 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 const CategoryDetail = () => {
-  const { id } = useParams();
-  const [cosmetics, setCosmetics] = useState([]);
-  const [error, setError] = useState(null);
+    const { id } = useParams();
+    const [category, setCategory] = useState(null);
 
-  useEffect(() => {
-    fetch(`http://localhost:5555/api/cosmetics`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch cosmetics");
-        return res.json();
-      })
-      .then((data) => {
-        // Filter cosmetics by the given category id
-        const filtered = data.filter(
-          (cosmetic) => cosmetic.category_id === parseInt(id)
-        );
-        setCosmetics(filtered);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError(err.message);
-      });
-  }, [id]);
+    useEffect(() => {
+        fetch(`http://localhost:5555/api/categories/${id}`, {
+            credentials: 'include',
+        })
+            .then((res) => res.json())
+            .then((data) => setCategory(data))
+            .catch((err) => console.error(err));
+    }, [id]);
 
-  if (error) return <div>Error: {error}</div>;
-  if (!cosmetics) return <div>Loading...</div>;
-  if (cosmetics.length === 0)
-    return <div>No products in this category.</div>;
+    if (!category) {
+        return <div>Loading...</div>;
+    }
 
-  // Assuming all cosmetics in the category share the same category name
-  const categoryName =
-    cosmetics[0].category && cosmetics[0].category.name
-      ? cosmetics[0].category.name
-      : "Unknown";
-
-  return (
-    <div className="container">
-      <h1>{categoryName}</h1>
-      <div className="grid">
-        {cosmetics.map((cosmetic) => (
-          <div key={cosmetic.id} className="product-card">
-            <h3>{cosmetic.name}</h3>
-            <p>Brand: {cosmetic.brand}</p>
-            <p>Price: ${cosmetic.price}</p>
-            <Link to={`/cosmetics/${cosmetic.id}`}>View Details</Link>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+    return (
+        <div>
+            <h1>Category: {category.name}</h1>
+            <h2>Products:</h2>
+            {category.cosmetics && category.cosmetics.length > 0 ? (
+                <ul>
+                    {category.cosmetics.map((cosmetic) => (
+                        <li key={cosmetic.id}>
+                            {cosmetic.name} - Brand: {cosmetic.brand}
+                            {cosmetic.note && ` - Note: ${cosmetic.note}`}
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p>No products in this category.</p>
+            )}
+        </div>
+    );
 };
 
 export default CategoryDetail;
-
