@@ -1,7 +1,7 @@
 # Beauty Bazaar 🛍️💄
 
 ## Overview  
-**Beauty Bazaar** is a **personal beauty product management application** that allows users to organize and track their beauty and skincare products. Users can **add cosmetics, categorize them, manage providers**, and keep track of their collection. Users can also view other uses products. The application features **authentication (sign up, login, logout)**, and protects certain pages from unauthorized access.
+**Beauty Bazaar** is a **personal beauty product management application** that allows users to organize and track their beauty and skincare products. Users can **add cosmetics, categorize them, manage providers**, and keep track of their collection. Users can also explore other users products. The application features **authentication (sign up, login, logout)**, and protects certain pages from unauthorized access.
 
 ### **Core Features**
 - **User Authentication** (Sign up, Log in, Log out)
@@ -156,15 +156,12 @@ Defines the **database schema** using SQLAlchemy ORM.
    ```sh
    cd beauty-bazaar
 3. Install dependencies:
-   -Backend: 
    ```sh
    pip install -r requirements.txt
-   -Frontend:
-   ```sh
-   cd client
    npm install
 4. Start the backend server:
    ```sh
+   cd server
    python app.py
 5. Start the frontend:
    ```sh
