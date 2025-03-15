@@ -18,7 +18,8 @@ import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   const [user, setUser] = useState(null);
-  const [cosmetics, setCosmetics] = useState([]);
+  const [cosmetics, setCosmetics] = useState([])
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetch("http://localhost:5555/api/check_session", {
@@ -27,11 +28,15 @@ function App() {
     })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        console.log("data ", data);
-        setUser(data);
+        console.log("Session check data:", data);
+        setUser(data); 
       })
-      .catch(() => setUser(null));
+      .catch(() => setUser(null))
+      .finally(() => setIsLoading(false)); 
   }, []);
+  if (isLoading) {
+    return <div>Loading...</div>; // Or a spinner
+  }
 
   return (
     <Router>
@@ -130,3 +135,6 @@ function App() {
 }
 
 export default App;
+
+
+

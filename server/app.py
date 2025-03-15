@@ -1,8 +1,9 @@
+# app.py file
+
 #!/usr/bin/env python3
-from flask_restful import Resource
+from flask_restful import Resource, Api
 from flask import session, make_response, jsonify, request
 from flask import request, make_response, session, abort, jsonify
-from flask_restful import Resource, Api
 from config import app, db, api
 from flask import Flask
 from sqlalchemy.exc import IntegrityError
@@ -506,17 +507,18 @@ class CategoryResource(Resource):
         if category:
             # Fetch cosmetics associated with the category using the association table
             cosmetics_list = []
+            user_id = session.get('user_id')
             for cosmetic_category in CosmeticCategory.query.filter_by(category_id=category_id).all():
                 cosmetic = db.session.get(
                     Cosmetic, cosmetic_category.cosmetic_id)
                 if cosmetic:
-                    cosmetics_list.append({
-                        'id': cosmetic.id,
-                        'name': cosmetic.name,
-                        'brand': cosmetic.brand,
-                        'note': cosmetic_category.notes,  # Include the note
-                        # Add other cosmetic attributes as needed
-                    })
+                    if cosmetic.user_id == user_id:
+                        cosmetics_list.append({
+                            'id': cosmetic.id,
+                            'name': cosmetic.name,
+                            'brand': cosmetic.brand,
+                            'note': cosmetic_category.notes,
+                        })
 
             category_data = {
                 'name': category.name,
