@@ -152,3 +152,21 @@ Defines the **database schema** using SQLAlchemy ORM.
 1. Clone the repository:  
    ```sh
    git clone https://github.com/razul189/beauty-bazaar.git
+2. Navigate to the project directory 
+   ```sh
+   cd beauty-bazaar
+3. Install dependencies:
+   -Backend: 
+   ```sh
+   pip install -r requirements.txt
+   -Frontend:
+   ```sh
+   cd client
+   npm install
+4. Start the backend server:
+   ```sh
+   python app.py
+5. Start the frontend:
+   ```sh
+   cd client
+   npm start
