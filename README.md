@@ -10,6 +10,7 @@
   - **Cosmetics**: Add, update, delete, and categorize your products.
   - **Providers**: Store information about beauty providers.
   - **Categories**: Organize your cosmetics into categories.
+  - **Users**: View other users and thier products.
 - **Session Persistence** so users remain logged in
 - **Protected Routes** for user-specific content
 - **Flask API & SQLite Database** for storage
