@@ -35,7 +35,7 @@ function App() {
       .finally(() => setIsLoading(false)); 
   }, []);
   if (isLoading) {
-    return <div>Loading...</div>; // Or a spinner
+    return <div>Loading...</div>;
   }
 
   return (

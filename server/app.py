@@ -1,5 +1,3 @@
-# app.py file
-
 #!/usr/bin/env python3
 from flask_restful import Resource, Api
 from flask import session, make_response, jsonify, request
