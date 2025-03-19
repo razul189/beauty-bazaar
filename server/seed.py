@@ -1,3 +1,4 @@
+# seed.py file
 #!/usr/bin/env python3
 
 # Standard library imports
@@ -15,9 +16,6 @@ from datetime import datetime
 if __name__ == '__main__':
     fake = Faker()
     with app.app_context():
-        # Reset the database
-        db.drop_all()
-        db.create_all()
 
         # Create sample users
         user1 = User(username="makeupLover",

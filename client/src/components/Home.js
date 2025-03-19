@@ -1,3 +1,4 @@
+// Home.js file
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -51,5 +52,6 @@ const Home = ({ user }) => {
 };
 
 export default Home;
+
 
 

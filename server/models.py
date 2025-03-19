@@ -1,6 +1,7 @@
+# models.py file
 from sqlalchemy_serializer import SerializerMixin
 from datetime import datetime
-from config import db
+from extensions import db
 from sqlalchemy.orm import validates
 
 # Association table for Cosmetic-Category (Many-to-Many) with a user-submittable field
@@ -57,7 +58,7 @@ class Cosmetic(db.Model, SerializerMixin):
     # One-to-Many: Each cosmetic belongs to one user
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    # Many-to-Many with Categories (using the updated table)
+    # Many-to-Many with Categories 
     categories = db.relationship(
         'Category', secondary='cosmetic_category', backref='cosmetics')
     

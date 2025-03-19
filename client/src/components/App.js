@@ -3,22 +3,22 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavBar from "./NavBar";
 import Home from "./Home";
 import Authentication from "./Authentication";
-import CategoryDetail from "./CategoryDetail";
+import Categories from "./Categories"; // Lists all categories
+import CategoryDetail from "./CategoryDetail"; // Shows a single category
+import CategoryForm from "./CategoryForm"; // Creates a new category
 import CosmeticDetail from "./CosmeticDetail";
-import NotFound from "./NotFound";
-import Cosmetic from "./Cosmetic"
+import Cosmetic from "./Cosmetic";
+import CosmeticCreate from "./CosmeticCreate";
 import Providers from "./Providers";
-import Users from "./Users"
-import CosmeticCreate from "./CosmeticCreate"
-import UserDetail from "./UserDetail";
-import ProviderForm from "./ProviderForm"
 import ProviderDetail from "./ProviderDetail";
-import CategoryForm from "./CategoryForm";
+import ProviderForm from "./ProviderForm";
+import Users from "./Users";
+import UserDetail from "./UserDetail";
+import NotFound from "./NotFound";
 import ProtectedRoute from "./ProtectedRoute";
 
 function App() {
   const [user, setUser] = useState(null);
-  const [cosmetics, setCosmetics] = useState([])
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -29,11 +29,12 @@ function App() {
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         console.log("Session check data:", data);
-        setUser(data); 
+        setUser(data);
       })
       .catch(() => setUser(null))
-      .finally(() => setIsLoading(false)); 
+      .finally(() => setIsLoading(false));
   }, []);
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -42,13 +43,42 @@ function App() {
     <Router>
       <NavBar user={user} setUser={setUser} />
       <Routes>
+        {/* Home & Auth Routes */}
         <Route path="/" element={<Home user={user} />} />
         <Route path="/auth" element={<Authentication setUser={setUser} />} />
+
+        {/* Category Routes */}
+        <Route
+          path="/categories"
+          element={
+            <ProtectedRoute user={user}>
+              <Categories user={user} />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/categories/:id"
           element={
             <ProtectedRoute user={user}>
-              <CategoryDetail cosmetics={cosmetics} setCosmetics={setCosmetics} />
+              <CategoryDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/category/new"
+          element={
+            <ProtectedRoute user={user}>
+              <CategoryForm />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Cosmetic Routes */}
+        <Route
+          path="/cosmetics"
+          element={
+            <ProtectedRoute user={user}>
+              <Cosmetic />
             </ProtectedRoute>
           }
         />
@@ -61,13 +91,15 @@ function App() {
           }
         />
         <Route
-          path="/cosmetics"
+          path="/cosmetic/new"
           element={
             <ProtectedRoute user={user}>
-              <Cosmetic />
+              <CosmeticCreate />
             </ProtectedRoute>
           }
         />
+
+        {/* Provider Routes */}
         <Route
           path="/providers"
           element={
@@ -76,6 +108,24 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/providers/:id"
+          element={
+            <ProtectedRoute user={user}>
+              <ProviderDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/provider/new"
+          element={
+            <ProtectedRoute user={user}>
+              <ProviderForm />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* User Routes */}
         <Route
           path="/users"
           element={
@@ -92,42 +142,8 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/categories" element={
-          <ProtectedRoute user={user}>
-          <Home user={user} />
-        </ProtectedRoute>} />
-        <Route
-          path="/category/new"
-          element={
-            <ProtectedRoute user={user}>
-              <CategoryForm />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/cosmetic/new"
-          element={
-            <ProtectedRoute user={user}>
-              <CosmeticCreate />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/provider/new"
-          element={
-            <ProtectedRoute user={user}>
-              <ProviderForm />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/providers/:id"
-          element={
-            <ProtectedRoute user={user}>
-              <ProviderDetail />
-            </ProtectedRoute>
-          }
-        />
+
+        {/* 404 Route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
@@ -135,6 +151,7 @@ function App() {
 }
 
 export default App;
+
 
 
 
