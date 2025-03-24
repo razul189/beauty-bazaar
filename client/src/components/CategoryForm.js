@@ -1,59 +1,53 @@
-//CategoryForm.js file
-import React from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useFormik } from "formik";
+import * as yup from "yup";
 
-const CategoryForm = () => {
-  const navigate = useNavigate();
-
-  const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
+function CategoryForm({ onCategoryCreated }) {
+  const formSchema = yup.object().shape({
+    name: yup
+      .string()
+      .required("Category name is required")
+      .min(2, "Must be at least 2 characters"),
   });
 
-  const handleSubmit = (values, { setSubmitting }) => {
-    fetch('http://localhost:5555/api/category', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(values),
-      credentials: 'include',
-    })
-      .then((res) => {
-        if (res.ok) {
-          navigate('/categories'); // Navigate to categories list
-        } else {
-          console.error('Failed to create category');
-        }
+  const formik = useFormik({
+    initialValues: { name: "" },
+    validationSchema: formSchema,
+    onSubmit: (values, { resetForm }) => {
+      fetch("/categories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
       })
-      .catch((err) => console.error(err))
-      .finally(() => setSubmitting(false));
-  };
+        .then((res) => {
+          if (res.ok) return res.json();
+          else throw new Error("Failed to create category");
+        })
+        .then((newCategory) => {
+          onCategoryCreated(newCategory);
+          resetForm();
+        })
+        .catch((err) => console.error(err));
+    },
+  });
 
   return (
-    <div>
-      <h1>Create Category</h1>
-      <Formik
-        initialValues={{ name: '' }}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ isSubmitting }) => (
-          <Form>
-            <div>
-              <label htmlFor="name">Name</label>
-              <Field type="text" name="name" />
-              <ErrorMessage name="name" component="div" style={{ color: 'red' }} />
-            </div>
-            <button type="submit" disabled={isSubmitting}>
-              Create Category
-            </button>
-          </Form>
-        )}
-      </Formik>
-    </div>
+    <form onSubmit={formik.handleSubmit}>
+      <label>Category Name:</label>
+      <input
+        type="text"
+        name="name"
+        value={formik.values.name}
+        onChange={formik.handleChange}
+      />
+      {formik.errors.name && (
+        <p style={{ color: "red" }}>{formik.errors.name}</p>
+      )}
+      <br />
+      <button type="submit">Submit</button>
+    </form>
   );
-};
+}
 
 export default CategoryForm;
+

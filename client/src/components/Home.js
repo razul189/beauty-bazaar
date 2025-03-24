@@ -1,57 +1,50 @@
-// Home.js file
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { UserContext } from "./UserContext";
+import CosmeticCard from "./CosmeticCard";
+import CosmeticForm from "./CosmeticForm";
 
-const Home = ({ user }) => {
+function Home() {
+  const { user, loggedIn } = useContext(UserContext);
+  const [showForm, setShowForm] = useState(false);
+
+  if (!loggedIn) return <h3>Please log in to view your dashboard</h3>;
+
+  const categories = user.categories || [];
+  const allCosmetics = categories.flatMap(cat => cat.cosmetics || []);
+  const recent = [...allCosmetics].slice(-3).reverse();
+
   return (
-    <div className="container">
-      <h1>Welcome to Beauty Bazaar!</h1>
+    <div>
+      <h1>Welcome back, {user.username} 💖</h1>
 
-      {user ? (
-        <>
-          <h2>Hello, {user.username}! 👋</h2>
-          <p>
-            Beauty Bazaar is your go-to platform for managing your beauty and skincare products. 
-            You can track your cosmetics, discover new providers, and organize products into categories. 💄✨
-          </p>
+      <section>
+        <p>You have <strong>{allCosmetics.length}</strong> cosmetics in <strong>{categories.length}</strong> categories.</p>
+      </section>
 
-          <h3>Quick Links:</h3>
-          <div className="grid">
-            <div className="product-card">
-              <h3>📦 View Your Cosmetics</h3>
-              <p>Manage your personal beauty collection.</p>
-              <Link to="/cosmetics">Go to Cosmetics</Link>
-            </div>
-            
-            <div className="product-card">
-              <h3>🏬 Discover Providers</h3>
-              <p>See all beauty product providers.</p>
-              <Link to="/providers">Go to Providers</Link>
-            </div>
+      <section>
+        <button onClick={() => setShowForm(prev => !prev)}>
+          {showForm ? "Cancel" : "➕ Add New Cosmetic"}
+        </button>
+        {showForm && <CosmeticForm setShowForm={setShowForm} />}
+      </section>
 
-            <div className="product-card">
-              <h3>📂 Organize by Category</h3>
-              <p>Group your cosmetics into categories.</p>
-              <Link to="/categories">Go to Categories</Link>
-            </div>
-          </div>
-        </>
-      ) : (
-        <>
-          <p>
-            Beauty Bazaar helps you manage and track your beauty products easily. 
-            Sign up or log in to get started. ✨
-          </p>
-          <Link to="/auth">
-            <button>Login / Sign Up</button>
-          </Link>
-        </>
-      )}
+      <section style={{ marginTop: "30px" }}>
+        <h3>🧴 Recently Added</h3>
+        {recent.length > 0 ? (
+          recent.map(c => <CosmeticCard key={c.id} cosmetic={c} />)
+        ) : (
+          <p>No cosmetics yet — let’s add your first!</p>
+        )}
+      </section>
     </div>
   );
-};
+}
 
 export default Home;
+
+
+
+
 
 
 
