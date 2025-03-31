@@ -1,36 +1,43 @@
+//CosmeticForm.js 
 import React, { useContext } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { UserContext } from "./UserContext";
 
-
-function CosmeticForm({ setShowForm, cosmetic = null, editing = false }) {
-  const { addCosmetic, editCosmetic, categories } = useContext(UserContext);
+function CosmeticForm({ setFormFlag, category, setCategory, cosmetic = null, editing = false }) {
+  const { addCosmetic, editCosmetic, categories, user } = useContext(UserContext);
 
   const formSchema = yup.object().shape({
     title: yup.string().required("Title is required").min(3, "Too short"),
     description: yup.string(),
-    note: yup.string().max(100, "Note too long"),
+    // note: yup.string().max(100, "Note too long"),
     category_id: yup.number().required("Please select a category"),
+
   });
 
   const formik = useFormik({
     initialValues: {
       title: cosmetic ? cosmetic.title : "",
       description: cosmetic ? cosmetic.description : "",
-      note: cosmetic ? cosmetic.note : "",
-      category_id: cosmetic ? cosmetic.category_id : "",
-    },
+      // note: cosmetic ? cosmetic.note : "",
+      category_id: cosmetic ? cosmetic.category_id : category?.id || "",
+       },
     validationSchema: formSchema,
-    onSubmit: (values) => {
-      if (editing) {
-        editCosmetic({ ...cosmetic, ...values });
-      } else {
-        addCosmetic(values);
-      }
-      formik.resetForm();
-      setShowForm(false);
-    },
+    // In CosmeticForm.js
+onSubmit: (values) => {
+  const newCosmetic = {
+    ...values,
+    user_id: user.id,
+  };
+
+  if (editing) {
+    editCosmetic({ ...cosmetic, ...newCosmetic });
+  } else {
+    addCosmetic(newCosmetic);
+  }
+  formik.resetForm();
+  setFormFlag(false);
+},
   });
 
   return (
@@ -50,13 +57,13 @@ function CosmeticForm({ setShowForm, cosmetic = null, editing = false }) {
         onChange={formik.handleChange}
       />
 
-      <label>Note:</label>
+      {/* <label>Note:</label>
       <input
         name="note"
         value={formik.values.note}
         onChange={formik.handleChange}
       />
-      <p className="error">{formik.errors.note}</p>
+      <p className="error">{formik.errors.note}</p> */}
 
       <label>Category:</label>
       <select

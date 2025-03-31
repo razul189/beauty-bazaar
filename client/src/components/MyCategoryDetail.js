@@ -1,3 +1,4 @@
+//MyCategoryDetail.js
 import React, { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { UserContext } from "./UserContext";
@@ -7,7 +8,7 @@ function MyCategoryDetail() {
   const { user } = useContext(UserContext);
   const { id } = useParams();
 
-  const category = (user.categories || []).find((cat) => cat.id == id);
+  const category = (user.categories || []).find((cat) => cat.id === id);
 
   if (!category) return <h3>Category not found or has no cosmetics.</h3>;
 

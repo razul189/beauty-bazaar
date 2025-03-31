@@ -1,3 +1,4 @@
+//CosmeticCard.js
 import React, { useContext, useState } from "react";
 import { UserContext } from "./UserContext";
 import CosmeticForm from "./CosmeticForm";
@@ -27,7 +28,7 @@ function CosmeticCard({ cosmetic }) {
           <h3>{cosmetic.title}</h3>
           <p><strong>Category:</strong> {cosmetic.category}</p>
           <p><strong>Description:</strong> {cosmetic.description}</p>
-          <p><strong>Note:</strong> {cosmetic.note}</p>
+          {/* <p><strong>Note:</strong> {cosmetic.note}</p> */}
 
           <button onClick={toggleEdit}>Edit</button>
           <button onClick={handleDelete} style={{ marginLeft: "10px", background: "tomato" }}>

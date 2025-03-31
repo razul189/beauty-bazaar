@@ -4,27 +4,12 @@ import { Link } from "react-router-dom";
 import CategoryForm from "./CategoryForm";
 
 function Categories() {
-  const { loggedIn } = useContext(UserContext);
-  const [categories, setCategories] = useState([]);
+  const { user, loggedIn, categories, addCategory } = useContext(UserContext);
   const [showForm, setShowForm] = useState(false);
-
-  // Fetch all categories from backend
-  useEffect(() => {
-    fetch("/categories")
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          throw new Error("Failed to load categories");
-        }
-      })
-      .then((data) => setCategories(data))
-      .catch((err) => console.error("Category fetch error:", err));
-  }, []);
-
+  
   const handleAddCategory = (newCategory) => {
-    setCategories([...categories, newCategory]);
-    setShowForm(false);
+    addCategory(newCategory);
+    setShowForm(false); 
   };
 
   if (!loggedIn) return <h3>Please log in to view categories</h3>;
@@ -38,7 +23,7 @@ function Categories() {
       ) : (
         categories.map((cat) => (
           <div key={cat.id} style={catStyle}>
-            <Link to={`/my-categories/${cat.id}`}>{cat.name}</Link>
+            {cat.name}
           </div>
         ))
       )}

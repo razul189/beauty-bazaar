@@ -1,3 +1,4 @@
+//Navigation.js
 import React, { useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
@@ -30,12 +31,6 @@ function Navigation() {
           <h3>Hello, {user.username}!</h3>
           <NavLink to="/" style={linkStyle}>
             Home
-          </NavLink>
-          <NavLink to="/my-categories" style={linkStyle}>
-            My Categories
-          </NavLink>
-          <NavLink to="/cosmetics" style={linkStyle}>
-            All Cosmetics
           </NavLink>
           <NavLink to="/categories" style={linkStyle}>
             Categories

@@ -1,42 +1,37 @@
-import React, { useContext, useState } from "react";
+//Home.js
+import React, { useContext, useState, useEffect } from "react";
 import { UserContext } from "./UserContext";
-import CosmeticCard from "./CosmeticCard";
 import CosmeticForm from "./CosmeticForm";
+import CategoryLink from "./CategoryLink";
 
 function Home() {
-  const { user, loggedIn } = useContext(UserContext);
+  const [displayCategories, setCategories] = useState([])
   const [showForm, setShowForm] = useState(false);
+  const { user, loggedIn, categories } = useContext(UserContext);
+
+  useEffect(()=> {
+    console.log("user.categories",user)
+    const CategoriesList = user.categories.map(c => <div key={c.id} ><CategoryLink category={c} /></div>)    
+    setCategories(CategoriesList)
+  }, [loggedIn, categories, user])
 
   if (!loggedIn) return <h3>Please log in to view your dashboard</h3>;
-
-  const categories = user.categories || [];
-  const allCosmetics = categories.flatMap(cat => cat.cosmetics || []);
-  const recent = [...allCosmetics].slice(-3).reverse();
 
   return (
     <div>
       <h1>Welcome back, {user.username} 💖</h1>
-
+      <h1>Your categories</h1>
       <section>
-        <p>You have <strong>{allCosmetics.length}</strong> cosmetics in <strong>{categories.length}</strong> categories.</p>
+        {displayCategories}
       </section>
-
       <section>
         <button onClick={() => setShowForm(prev => !prev)}>
           {showForm ? "Cancel" : "➕ Add New Cosmetic"}
         </button>
         {showForm && <CosmeticForm setShowForm={setShowForm} />}
       </section>
-
-      <section style={{ marginTop: "30px" }}>
-        <h3>🧴 Recently Added</h3>
-        {recent.length > 0 ? (
-          recent.map(c => <CosmeticCard key={c.id} cosmetic={c} />)
-        ) : (
-          <p>No cosmetics yet — let’s add your first!</p>
-        )}
-      </section>
     </div>
+    
   );
 }
 

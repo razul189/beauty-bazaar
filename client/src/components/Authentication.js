@@ -25,14 +25,14 @@ function Authentication({ setUser }) {
       .then((response) => {
         if (response.ok) return response.json();
         else {
-          return response.json().then(errorData => { // Parse error JSON
-            throw new Error(JSON.stringify({status: response.status, message: errorData.error})); //Include status code, and message.
+          return response.json().then(errorData => {
+            throw new Error(JSON.stringify({status: response.status, message: errorData.error})); 
           });
         }
       })
       .then((data) => {
-        setUser(data); // Store logged-in user state
-        navigate("/"); // Redirect to homepage
+        setUser(data);
+        navigate("/"); 
       })
       .catch((error) => {
         try{
