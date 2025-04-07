@@ -1,4 +1,3 @@
-# models.py file
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.hybrid import hybrid_property
 from flask_sqlalchemy import SQLAlchemy
@@ -14,8 +13,6 @@ user_categories = db.Table('user_categories',
                                'users.id'), primary_key=True),
                            db.Column('category_id', db.Integer, db.ForeignKey(
                                'categories.id'), primary_key=True),
-                           db.Column('is_favorite', db.Boolean,
-                                     default=False)  # Added field
                            )
 
 

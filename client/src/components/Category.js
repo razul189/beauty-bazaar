@@ -1,4 +1,3 @@
-//Category.js file
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "./UserContext";
 import { useParams, useNavigate } from "react-router-dom";
@@ -15,7 +14,6 @@ function Category() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("user.categories", user.categories); 
 
     if (loggedIn) {
       const selectedCategory = user.categories.find(c => c.id == id);
@@ -25,7 +23,6 @@ function Category() {
         const updatedCategory = {
           ...selectedCategory,
           cosmetics: filteredCosmetics,
-          is_favorite: Boolean(selectedCategory.is_favorite)
         };
         setCategory(updatedCategory);
       } else {
@@ -58,9 +55,8 @@ function Category() {
     <>
       <h3>{category.name}</h3>
       <h3>
-        {category.is_favorite === true ? "One of my favorite categories!" : "Not a favorite category"}
       </h3>
-      <h3>All my cosmetics:</h3>
+      <h3>Cosmetics:</h3>
       {categoryCosmetics}
       <br />
       {formFlag ? <CosmeticForm setFormFlag={setFormFlag} category={category} /> : <button onClick={handleClick}>Add Cosmetic</button>}

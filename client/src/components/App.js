@@ -6,7 +6,7 @@ import Home from "./Home";
 import MyCategoryDetail from "./MyCategoryDetail";
 import Cosmetics from "./Cosmetics";
 import Categories from "./Categories";
-import { UserMethods } from "./UserContext";
+import { UserProvider } from "./UserContext";
 import Login from "./Login";
 import Category from "./Category";
 import Signup from "./Signup";
@@ -16,7 +16,7 @@ import Signup from "./Signup";
 function App() {
   return (
     <Router>
-      <UserMethods>
+      <UserProvider>
         <Navigation />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -28,7 +28,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
         </Routes>
-      </UserMethods>
+      </UserProvider>
     </Router>
   );
 }

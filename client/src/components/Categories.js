@@ -17,7 +17,6 @@ function Categories() {
   return (
     <div>
       <h1>All Categories</h1>
-
       {categories.length === 0 ? (
         <p>No categories yet. Be the first to create one!</p>
       ) : (

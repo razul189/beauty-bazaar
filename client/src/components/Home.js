@@ -1,4 +1,3 @@
-//Home.js
 import React, { useContext, useState, useEffect } from "react";
 import { UserContext } from "./UserContext";
 import CosmeticForm from "./CosmeticForm";
@@ -10,7 +9,6 @@ function Home() {
   const { user, loggedIn, categories } = useContext(UserContext);
 
   useEffect(()=> {
-    console.log("user.categories",user)
     const CategoriesList = user.categories.map(c => <div key={c.id} ><CategoryLink category={c} /></div>)    
     setCategories(CategoriesList)
   }, [loggedIn, categories, user])

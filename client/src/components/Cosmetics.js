@@ -1,4 +1,3 @@
-//Cosmetics.js
 import React, { useContext,useEffect,useState } from "react";
 import { UserContext } from "./UserContext";
 import CosmeticCard from "./CosmeticCard";
@@ -14,7 +13,7 @@ function Cosmetics() {
   useEffect(() => {
     if (loggedIn){
       const selectedCategory = user.categories.find(c => c.id == category_id)
-      const selectedCosmetic = selectedCategory.cosmetics.find(cos => cos.id == id)
+      const selectedCosmetic = selectedCategory.cosmetics.find(co => co.id == id)
       setCosmetic(selectedCosmetic)
     }
   }, [loggedIn])
@@ -24,10 +23,9 @@ function Cosmetics() {
 
   return (
     <div>
-      <h1>Cosmetic:</h1>
+      <h1>All My Cosmetics</h1>
       <h3>Title: {cosmetic.title}</h3>
       <h3>Description: {cosmetic.description}</h3>
-      {/* <h3>Note: {cosmetic.note}</h3> */}
     </div>
   );
 }

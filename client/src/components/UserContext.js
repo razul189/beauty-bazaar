@@ -1,9 +1,8 @@
-//UserProvider.js
 import React, { useState, useEffect, createContext } from "react";
 
 const UserContext = createContext();
 
-function UserMethods({ children }) {
+function UserProvider({ children }) {
   const [user, setUser] = useState({ categories: [] });
   const [categories, setCategories] = useState([])
   const [loggedIn, setLoggedIn] = useState(false);
@@ -25,19 +24,9 @@ function UserMethods({ children }) {
       })
       .catch((err) => console.error("Check session failed:", err));
   }, []);
-
-  const fetchCategories = () => {
-    fetch('/categories')
-    .then(r => r.json())
-    .then(data => {
-        console.log("I am fetching",data)
-        setCategories(data)
-    })
-  }
   
   const login = (userData) => {
-    fetchCategories();
-    console.log("userData",userData);
+    setCategories(userData.all_categories);
     setUser(userData);
     setLoggedIn(true);
   };
@@ -54,39 +43,9 @@ function UserMethods({ children }) {
   const signup = (userData) => login(userData);
   
   const addCategory = (newCategory) => {
-    console.log("newCategory",newCategory)
     setCategories(prev => [...prev, newCategory]);
   };
-
-  const editCategory = (updatedCategory) => {
-    fetch(`/categories/${updatedCategory.id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedCategory),
-    })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json(); 
-    })
-    .then((data) => { 
-      const updatedCategories = user.categories.map((cat) => {
-        if (cat.id === updatedCategory.id) {
-          return data;
-        }
-        return cat;
-      });
-      console.log("updatedCategories",updatedCategories)
-      setUser((prev) => ({ ...prev, categories: updatedCategories }));
-    })
-    .catch((error) => {
-      console.error('Error updating category:', error);
-    });
-  };
-
+  
   const addCosmetic = (newCosmetic) => {
     fetch('/cosmetics', {
       method: 'POST',
@@ -98,16 +57,14 @@ function UserMethods({ children }) {
     .then(r => r.json())
     .then(data => {
       let userCategories = [...user.categories]
-      let category = userCategories.find(c => c.id === newCosmetic.category_id)
+      let category = userCategories.find(c => c.id == newCosmetic.category_id)
       if (!category){
-        category = categories.find(c => c.id === newCosmetic.category_id)
+        category = categories.find(c => c.id == newCosmetic.category_id)
         category = {...category, cosmetics: []}
         userCategories = [...user.categories, {...category, cosmetics: []}]
       } 
-      console.log("data ",data)
       const updatedCategory = {...category, cosmetics: [...category.cosmetics, data]}
-      console.log("updatedCategory",updatedCategory)
-      const updatedUserCategories = userCategories.map(c => c.id === category.id ? updatedCategory : c)
+      const updatedUserCategories = userCategories.map(c => c.id == category.id ? updatedCategory : c)
       const updatedCategories = {
         ...user,
         categories: updatedUserCategories
@@ -147,26 +104,6 @@ function UserMethods({ children }) {
     })
     .catch((error) => {
       console.error('Error updating cosmetic:', error);
-    });
-  };
-
-  const deleteCategory = (categoryToDelete) => {
-    fetch(`/categories/${categoryToDelete.id}`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then(res => {
-      if (!res.ok) throw new Error('Deletion failed');
-      return res.json();
-    })
-    .then(() => {
-      setUser(prevUser => ({
-        ...prevUser,
-        categories: prevUser.categories.filter(c => c.id !== categoryToDelete.id)
-      }));
-    })
-    .catch(error => {
-      console.error('Delete error:', error);
     });
   };
 
@@ -217,8 +154,6 @@ function UserMethods({ children }) {
         addCosmetic,
         editCosmetic,
         deleteCosmetic,
-        editCategory,
-        deleteCategory
       }}
     >
       {children}
@@ -226,6 +161,6 @@ function UserMethods({ children }) {
   );
 }
 
-export { UserContext, UserMethods };
+export { UserContext, UserProvider };
 
 

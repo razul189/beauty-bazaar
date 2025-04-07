@@ -1,43 +1,38 @@
-//CosmeticForm.js 
 import React, { useContext } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { UserContext } from "./UserContext";
 
-function CosmeticForm({ setFormFlag, category, setCategory, cosmetic = null, editing = false }) {
+function CosmeticForm({ setShowForm, category, cosmetic = null, editing = false }) {
   const { addCosmetic, editCosmetic, categories, user } = useContext(UserContext);
 
   const formSchema = yup.object().shape({
     title: yup.string().required("Title is required").min(3, "Too short"),
     description: yup.string(),
-    // note: yup.string().max(100, "Note too long"),
     category_id: yup.number().required("Please select a category"),
-
   });
 
   const formik = useFormik({
     initialValues: {
       title: cosmetic ? cosmetic.title : "",
       description: cosmetic ? cosmetic.description : "",
-      // note: cosmetic ? cosmetic.note : "",
       category_id: cosmetic ? cosmetic.category_id : category?.id || "",
-       },
+    },
     validationSchema: formSchema,
-    // In CosmeticForm.js
-onSubmit: (values) => {
-  const newCosmetic = {
-    ...values,
-    user_id: user.id,
-  };
+    onSubmit: (values) => {
+      const newCosmetic = {
+        ...values,
+        user_id: user.id,
+      };
 
-  if (editing) {
-    editCosmetic({ ...cosmetic, ...newCosmetic });
-  } else {
-    addCosmetic(newCosmetic);
-  }
-  formik.resetForm();
-  setFormFlag(false);
-},
+      if (editing) {
+        editCosmetic({ ...cosmetic, ...newCosmetic });
+      } else {
+        addCosmetic(newCosmetic);
+      }
+      formik.resetForm();
+      setShowForm(false); // Close the form here
+    },
   });
 
   return (
@@ -56,14 +51,6 @@ onSubmit: (values) => {
         value={formik.values.description}
         onChange={formik.handleChange}
       />
-
-      {/* <label>Note:</label>
-      <input
-        name="note"
-        value={formik.values.note}
-        onChange={formik.handleChange}
-      />
-      <p className="error">{formik.errors.note}</p> */}
 
       <label>Category:</label>
       <select

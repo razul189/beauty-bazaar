@@ -1,9 +1,7 @@
-//CosmeticLink.js
 import React, { useState, useContext } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { UserContext } from "./UserContext"; 
 import CosmeticEditForm from './CosmeticEditForm';
-
 
 const CosmeticLink = ({ cosmetic }) => {
   const [formFlag, setFormFlag] = useState(false);

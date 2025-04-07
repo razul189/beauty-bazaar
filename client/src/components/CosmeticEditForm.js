@@ -1,10 +1,9 @@
-//CosmeticEditForm.js
 import React, { useContext } from "react";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { UserContext } from "./UserContext";
 
-function CosmeticEditForm({ cosmetic, setShowForm }) {
+function CosmeticEditForm({ cosmetic, setFormFlag }) { // Receive setFormFlag
   const { editCosmetic, categories } = useContext(UserContext);
 
   const formSchema = yup.object().shape({
@@ -17,14 +16,14 @@ function CosmeticEditForm({ cosmetic, setShowForm }) {
     initialValues: {
       title: cosmetic.title,
       description: cosmetic.description || "",
-      // note: cosmetic.note || "",
+      note: cosmetic.note || "",
       category_id: cosmetic.category_id,
     },
     validationSchema: formSchema,
     onSubmit: (values) => {
       editCosmetic({ ...cosmetic, ...values });
       formik.resetForm();
-      setShowForm(false);
+      setFormFlag(false); // Close the form here
     },
   });
 
@@ -44,28 +43,6 @@ function CosmeticEditForm({ cosmetic, setShowForm }) {
         value={formik.values.description}
         onChange={formik.handleChange}
       />
-
-      {/* <label>Note:</label>
-      <input name="note" 
-      value={formik.values.note} 
-      onChange={formik.handleChange} />
-      <p className="error">{formik.errors.note}</p> */}
-
-
-      <label>Category:</label>
-      <select
-        name="category_id"
-        value={formik.values.category_id}
-        onChange={formik.handleChange}
-      >
-        <option value="">-- Choose One --</option>
-        {categories.map((cat) => (
-          <option key={cat.id} value={cat.id}>
-            {cat.name}
-          </option>
-        ))}
-      </select>
-      <p className="error">{formik.errors.category_id}</p>
       <button type="submit">Update Cosmetic</button>
     </form>
   );
