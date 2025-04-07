@@ -26,6 +26,7 @@ function UserProvider({ children }) {
   }, []);
   
   const login = (userData) => {
+    //console.log(userData)
     setCategories(userData.all_categories);
     setUser(userData);
     setLoggedIn(true);

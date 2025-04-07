@@ -15,11 +15,9 @@ from sqlalchemy import select, update, delete
 
 class CheckSession(Resource):
     def get(self):
-        print("user", )
         session.get('user_id')
         if session.get('user_id'):
             user = User.query.get(session['user_id'])
-            print("user", user)
             if user:
                 user_dict = {
                     "id": user.id,

@@ -1,7 +1,7 @@
 # Beauty Bazaar
 
 
-Welcome to **My Beauty Bazaar** — a full-stack web application that helps users keep track of their personal beauty product categories and cosmetics, complete with custom notes for each category. It’s built with a Flask backend and a React frontend, and features a many-to-many relationship between users and categories with a user-submittable attribute (`is_favorite`) that tracks whether a category is a user’s favorite.
+Welcome to **My Beauty Bazaar** — a full-stack web application that helps users keep track of their personal beauty product categories and cosmetics. It’s built with a Flask backend and a React frontend, and features a many-to-many relationship between users and categories that tracks which categories belong to a user’s through different cosmetics.
 
 
 ---
@@ -10,9 +10,8 @@ Welcome to **My Beauty Bazaar** — a full-stack web application that helps user
 
 - ✅ User Authentication (Signup, Login, Logout)
 - ✅ Create and manage your own **categories** (e.g. Skincare, Makeup, Haircare)
-- ✅ Add **cosmetics** to categories with descriptions and titles
+- ✅ Add **cosmetics** to categories and users with descriptions and titles
 - ✅ Full CRUD for cosmetics
-- ✅ Mark categories as **favorites** per user
 - ✅ React Router for client-side navigation
 - ✅ Formik + Yup validation for all forms
 - ✅ Backend session handling with Flask

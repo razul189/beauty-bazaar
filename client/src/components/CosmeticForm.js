@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { UserContext } from "./UserContext";
 
-function CosmeticForm({ setFormFlag, category, cosmetic = null, editing = false }) {
+function CosmeticForm({ setShowForm, category, cosmetic = null, editing = false }) {
   const { addCosmetic, editCosmetic, categories, user } = useContext(UserContext);
 
   const formSchema = yup.object().shape({
@@ -31,7 +31,7 @@ function CosmeticForm({ setFormFlag, category, cosmetic = null, editing = false 
         addCosmetic(newCosmetic);
       }
       formik.resetForm();
-      setFormFlag(false); // Close the form here
+      setShowForm(false); // Close the form here
     },
   });
 

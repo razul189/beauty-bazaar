@@ -8,7 +8,7 @@ function Category() {
   const [category, setCategory] = useState({
     cosmetics: []
   });
-  const [formFlag, setFormFlag] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const { user, loggedIn, deleteCosmetic } = useContext(UserContext);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ function Category() {
   }, [loggedIn, user, id, navigate]);
 
   const handleClick = () => {
-    setFormFlag(formFlag => !formFlag);
+    setShowForm(showForm => !showForm);
   };
 
   const handleDelete = (cosmetic) => {
@@ -59,7 +59,7 @@ function Category() {
       <h3>Cosmetics:</h3>
       {categoryCosmetics}
       <br />
-      {formFlag ? <CosmeticForm setFormFlag={setFormFlag} category={category} /> : <button onClick={handleClick}>Add Cosmetic</button>}
+      {showForm ? <CosmeticForm setShowForm={setShowForm} category={category} /> : <button onClick={handleClick}>Add Cosmetic</button>}
     </>
   );
 }
